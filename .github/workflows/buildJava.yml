@@ -1,0 +1,23 @@
+name: Java CI with Maven - Test and package   # Nom affiché dans l’onglet Actions
+
+on:
+  pull_request:                                # Déclencheur
+    branches: [ "main" ]                       # Se lance pour les PR ciblant main
+
+jobs:
+  build:                                       # 1 seul job
+    name: Build and Test
+    runs-on: ubuntu-latest                     # S’exécute sur la dernière Ubuntu
+
+    steps:                                     # 3 étapes
+      - name: Checkout repository              # 1) Récupérer le code de la PR
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21 (Corretto)        # 2) Installer Java 21 (Corretto)
+        uses: actions/setup-java@v4
+        with:
+          distribution: corretto
+          java-version: '21'
+
+      - name: Build with Maven (tests included) # 3) Construire + lancer les tests
+        run: mvn -B package
