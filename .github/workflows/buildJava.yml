@@ -1,23 +1,36 @@
-name: Java CI with Maven - Test and package   # Nom affiché dans l’onglet Actions
+name: Java CI with Maven - Test and package
 
 on:
-  pull_request:                                # Déclencheur
-    branches: [ "main" ]                       # Se lance pour les PR ciblant main
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  build:                                       # 1 seul job
-    name: Build and Test
-    runs-on: ubuntu-latest                     # S’exécute sur la dernière Ubuntu
+  build:
+    name: Build, Test, and Analyze on SonarCloud
+    runs-on: ubuntu-latest
 
-    steps:                                     # 3 étapes
-      - name: Checkout repository              # 1) Récupérer le code de la PR
+    # (facultatif mais recommandé pour la déco PR)
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Java 21 (Corretto)        # 2) Installer Java 21 (Corretto)
+      - name: Set up Java 21 (Corretto)
         uses: actions/setup-java@v4
         with:
           distribution: corretto
           java-version: '21'
 
-      - name: Build with Maven (tests included) # 3) Construire + lancer les tests
-        run: mvn -B package
+      - name: Build + Test + SonarCloud analysis
+        env:
+          # requis par Sonar Cloud
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
+          # utile pour la déco PR
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -Dsonar.projectKey=$(echo ${{ github.repository }} | sed 's-/-_-')
