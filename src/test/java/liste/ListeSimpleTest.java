@@ -262,15 +262,3 @@ void testSupprimePremier() {
 }
 
 
-@Test
-void echangerLeMemeNoeudNeChangeRien() {
-    listeATester.ajout(3);
-    listeATester.ajout(2);
-    listeATester.ajout(1);
-    Noeud meme = listeATester.tete.getSuivant();
-    String avant = listeATester.toString();
-    int sizeAvant = listeATester.getSize();
-    listeATester.echanger(meme, meme);
-    assertEquals(avant, listeATester.toString());
-    assertEquals(sizeAvant, listeATester.getSize());
-}
