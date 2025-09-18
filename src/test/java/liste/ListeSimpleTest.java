@@ -270,13 +270,14 @@ void testSupprimePremier() {
         String etatAvant = listeATester.toString();
         int sizeAvant = listeATester.getSize();
 
-        // 99 n'est pas dans la liste : le while ira jusqu'à courant == null, puis le if ne s'exécutera pas
+        // 99 n'est pas dans la liste : le while va jusqu'à courant == null puis le if ne s'exécute pas
         listeATester.modifiePremier(99, 4);
 
         // La liste ne change pas
         assertEquals(etatAvant, listeATester.toString());
         assertEquals(sizeAvant, listeATester.getSize());
-    }
+}
+
 
 }
 
