@@ -278,6 +278,33 @@ void testSupprimePremier() {
     assertEquals(sizeAvant, listeATester.getSize());
     }
 
+    @Test
+    void echangerAvecLeMemeNoeudNeChangeRien() {
+        // Liste : 3 -> 2 -> 1
+        listeATester.ajout(1);
+        listeATester.ajout(2);
+        listeATester.ajout(3);
+
+        // On capture des références pour vérifier qu'elles ne bougent pas
+        Noeud a = listeATester.tete;                  // Noeud(3)
+        Noeud b = a.getSuivant();                     // Noeud(2)
+        Noeud c = b.getSuivant();                     // Noeud(1)
+
+        String etatAvant = listeATester.toString();
+        long sizeAvant = listeATester.getSize();
+
+        // Appel avec le même noeud en r1 et r2 -> doit faire un return immédiat
+        listeATester.echanger(b, b);
+
+        // Aucune modification attendue
+        assertEquals(etatAvant, listeATester.toString());
+        assertEquals(sizeAvant, listeATester.getSize());
+        assertSame(a, listeATester.tete);
+        assertSame(b, listeATester.tete.getSuivant());
+        assertSame(c, listeATester.tete.getSuivant().getSuivant());
+    }
+
+
 
 }
 
