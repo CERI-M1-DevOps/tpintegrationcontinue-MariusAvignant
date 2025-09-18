@@ -259,6 +259,25 @@ void testSupprimePremier() {
         System.out.println(listeATester);
         assertEquals( "ListeSimple(Noeud(4), Noeud(2), Noeud(3), Noeud(1), Noeud(5))",listeATester.toString());
     }
+
+    @Test
+    void modifiePremierElementAbsentNeChangeRien() {
+        // Liste initiale : 3 -> 2 -> 1
+        listeATester.ajout(1);
+        listeATester.ajout(2);
+        listeATester.ajout(3);
+
+        String etatAvant = listeATester.toString();
+        int sizeAvant = listeATester.getSize();
+
+        // 99 n'est pas dans la liste : le while ira jusqu'à courant == null, puis le if ne s'exécutera pas
+        listeATester.modifiePremier(99, 4);
+
+        // La liste ne change pas
+        assertEquals(etatAvant, listeATester.toString());
+        assertEquals(sizeAvant, listeATester.getSize());
+    }
+
 }
 
 
