@@ -1,0 +1,39 @@
+name: Generate & Deploy Javadoc
+
+on:
+  pull_request:
+    types: [closed]         # se déclenche quand la PR est "closed"
+    # branches: [main]      # décommente si tu veux limiter aux PR fusionnées vers main
+
+jobs:
+  build-and-deploy:
+    if: ${{ github.event.pull_request.merged == true }}   # ne continue que si la PR est fusionnée
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # requis pour pousser sur gh-pages
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'     # ajuste à ta version si besoin
+          cache: maven
+
+      - name: Build Javadoc
+        run: mvn -B -ntp javadoc:javadoc   # génère la doc dans target/site/apidocs
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./target/site/apidocs
+          user_name: github-actions[bot]
+          user_email: github-actions[bot]@users.noreply.github.com
+          # force_orphan: true   # optionnel : branche gh-pages sans historique
