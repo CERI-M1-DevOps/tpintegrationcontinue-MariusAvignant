@@ -259,6 +259,53 @@ void testSupprimePremier() {
         System.out.println(listeATester);
         assertEquals( "ListeSimple(Noeud(4), Noeud(2), Noeud(3), Noeud(1), Noeud(5))",listeATester.toString());
     }
+
+    @Test
+    void modifiePremierElementAbsentNeChangeRien() {
+        // Liste initiale : 3 -> 2 -> 1
+        listeATester.ajout(1);
+        listeATester.ajout(2);
+        listeATester.ajout(3);
+
+        String etatAvant = listeATester.toString();
+        long sizeAvant = listeATester.getSize();
+
+        // 99 n'est pas dans la liste : le while va jusqu'à courant == null puis le if ne s'exécute pas
+        listeATester.modifiePremier(99, 4);
+
+        // La liste ne change pas
+        assertEquals(etatAvant, listeATester.toString());
+    assertEquals(sizeAvant, listeATester.getSize());
+    }
+
+    @Test
+    void echangerAvecLeMemeNoeudNeChangeRien() {
+        // Liste : 3 -> 2 -> 1
+        listeATester.ajout(1);
+        listeATester.ajout(2);
+        listeATester.ajout(3);
+
+        // On capture des références pour vérifier qu'elles ne bougent pas
+        Noeud a = listeATester.tete;                  // Noeud(3)
+        Noeud b = a.getSuivant();                     // Noeud(2)
+        Noeud c = b.getSuivant();                     // Noeud(1)
+
+        String etatAvant = listeATester.toString();
+        long sizeAvant = listeATester.getSize();
+
+        // Appel avec le même noeud en r1 et r2 -> doit faire un return immédiat
+        listeATester.echanger(b, b);
+
+        // Aucune modification attendue
+        assertEquals(etatAvant, listeATester.toString());
+        assertEquals(sizeAvant, listeATester.getSize());
+        assertSame(a, listeATester.tete);
+        assertSame(b, listeATester.tete.getSuivant());
+        assertSame(c, listeATester.tete.getSuivant().getSuivant());
+    }
+
+
+
 }
 
 
